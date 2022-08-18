@@ -254,15 +254,18 @@ std::unique_ptr<Runtime> init_global_vulkan_runtime() {
   try {
     return std::make_unique<Runtime>(Runtime(default_config));
   } catch (const std::exception& e) {
-    TORCH_WARN(
-        "Pytorch Vulkan Runtime: Failed to initialize the global vulkan runtime! "
-        "The global vulkan runtime is invalid. Error: ",
-        e.what());
+    std::stringstream ss;
+    ss << "Pytorch Vulkan Runtime: ";
+    ss << "Failed to initialize the global vulkan runtime! ";
+    ss << "The global vulkan runtime is invalid. Error: ";
+    ss << e.what();
+    VK_THROW(ss.str());
   } catch (...) {
-    TORCH_WARN(
-        "Pytorch Vulkan Runtime: Failed to initialize the global vulkan runtime! "
-        "The global vulkan runtime is invalid. "
-        "Error: Unknown");
+    std::stringstream ss;
+    ss << "Pytorch Vulkan Runtime: ";
+    ss << "Failed to initialize the global vulkan runtime! ";
+    ss << "The global vulkan runtime is invalid. Error: Unknown";
+    VK_THROW(ss.str());
   }
 
   return std::unique_ptr<Runtime>(nullptr);
